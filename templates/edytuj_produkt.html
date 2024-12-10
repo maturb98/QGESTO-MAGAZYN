@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Edytuj Produkt{% endblock %}
+{% block content %}
+<h1 class="mb-4">Edytuj Produkt</h1>
+<form action="" method="post" enctype="multipart/form-data" class="row g-3 w-75">
+    {% if session.get('grupa') == 3 %}
+    <div class="col-md-4">
+        <label for="nazwa" class="form-label">Nazwa:</label>
+        <input type="text" id="nazwa" name="nazwa" value="{{ produkt.nazwa }}" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+        <label for="numer_seryjny" class="form-label">Numer seryjny:</label>
+        <input type="text" id="numer_seryjny" name="numer_seryjny" value="{{ produkt.numer_seryjny }}" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="model" class="form-label">Model:</label>
+        <input type="text" id="model" name="model" value="{{ produkt.model }}" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="stan_techniczny" class="form-label">Stan techniczny:</label>
+        <input type="text" id="stan_techniczny" name="stan_techniczny" value="{{ produkt.stan_techniczny }}" class="form-control">
+    </div>
+    <div class="col-md-12">
+        <label for="uwagi" class="form-label">Uwagi:</label>
+        <textarea id="uwagi" name="uwagi" class="form-control">{{ produkt.uwagi }}</textarea>
+    </div>
+    {% else %}
+    <p><strong>Nazwa produktu:</strong> {{ produkt.nazwa }}</p>
+    <p><strong>Numer seryjny:</strong> {{ produkt.numer_seryjny or 'brak' }}</p>
+    <p><strong>Model:</strong> {{ produkt.model or 'brak' }}</p>
+    <p><strong>Stan techniczny:</strong> {{ produkt.stan_techniczny or 'brak' }}</p>
+    <p><strong>Uwagi:</strong> {{ produkt.uwagi or 'brak' }}</p>
+    {% endif %}
+
+    <div class="col-md-4">
+        <label for="ilosc" class="form-label">Ilość:</label>
+        <input type="number" id="ilosc" name="ilosc" value="{{ produkt.ilosc }}" class="form-control" required>
+    </div>
+
+    {% if session.get('grupa') == 3 %}
+    <div class="col-md-4">
+        <label for="obrazek" class="form-label">Nowy obrazek (opcjonalnie):</label>
+        <input type="file" id="obrazek" name="obrazek" class="form-control">
+    </div>
+    {% endif %}
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+    </div>
+</form>
+{% endblock %}

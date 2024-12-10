@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Magazyn - {{ magazyn.nazwa }}{% endblock %}
+{% block content %}
+<h1 class="mb-4">Magazyn: {{ magazyn.nazwa }}</h1>
+
+<!-- Formularz filtrów -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-2">
+        <label for="f_id" class="form-label">ID:</label>
+        <input type="text" id="f_id" name="f_id" value="{{ f_id }}" class="form-control" placeholder="ID">
+    </div>
+    <div class="col-md-2">
+        <label for="f_nazwa" class="form-label">Nazwa:</label>
+        <input type="text" id="f_nazwa" name="f_nazwa" value="{{ f_nazwa }}" class="form-control" placeholder="Nazwa">
+    </div>
+    <div class="col-md-2">
+        <label for="f_ilosc" class="form-label">Ilość:</label>
+        <input type="text" id="f_ilosc" name="f_ilosc" value="{{ f_ilosc }}" class="form-control" placeholder="Ilość">
+    </div>
+    <div class="col-md-2">
+        <label for="f_numer_seryjny" class="form-label">Numer seryjny:</label>
+        <input type="text" id="f_numer_seryjny" name="f_numer_seryjny" value="{{ f_numer_seryjny }}" class="form-control" placeholder="Nr seryjny">
+    </div>
+    <div class="col-md-2">
+        <label for="f_model" class="form-label">Model:</label>
+        <input type="text" id="f_model" name="f_model" value="{{ f_model }}" class="form-control" placeholder="Model">
+    </div>
+    <div class="col-md-2">
+        <label for="f_uwagi" class="form-label">Uwagi:</label>
+        <input type="text" id="f_uwagi" name="f_uwagi" value="{{ f_uwagi }}" class="form-control" placeholder="Uwagi">
+    </div>
+    <div class="col-md-2">
+        <label for="f_stan_techniczny" class="form-label">Stan techniczny:</label>
+        <select id="f_stan_techniczny" name="f_stan_techniczny" class="form-select">
+            <option value="wszystkie">Wszystkie</option>
+            <option value="SPRAWNE" {% if f_stan_techniczny == 'SPRAWNE' %}selected{% endif %}>SPRAWNE</option>
+            <option value="NIE SPRAWNE" {% if f_stan_techniczny == 'NIE SPRAWNE' %}selected{% endif %}>NIE SPRAWNE</option>
+            <option value="DO SPRAWDZENIA" {% if f_stan_techniczny == 'DO SPRAWDZENIA' %}selected{% endif %}>DO SPRAWDZENIA</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Filtruj</button>
+        <a href="{{ url_for('magazyn', magazyn_id=magazyn.id) }}" class="btn btn-secondary">Wyczyść</a>
+    </div>
+</form>
+
+<h2 class="h5 mb-3">Produkty:</h2>
+<table class="table align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Ilość</th>
+            <th>Numer seryjny</th>
+            <th>Model</th>
+            <th>Uwagi</th>
+            <th>Stan techniczny</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produkt in produkty %}
+        {% set row_class = '' %}
+        {% if produkt.stan_techniczny == 'SPRAWNE' %}
+            {% set row_class = 'table-success' %}
+        {% elif produkt.stan_techniczny == 'NIE SPRAWNE' %}
+            {% set row_class = 'table-danger' %}
+        {% elif produkt.stan_techniczny == 'DO SPRAWDZENIA' %}
+            {% set row_class = 'table-warning' %}
+        {% endif %}
+        {% if produkt.uwagi == 'ZESTAW MONTAŻOWY' %}
+            {% set row_class = 'table-fiolet' %}
+        {% endif %}
+        
+        <tr class="{{ row_class }}">
+            <td>{{ produkt.id }}</td>
+            <td>
+                {% if produkt.obrazek %}
+                <a href="{{ url_for('pokaz_obrazek', produkt_id=produkt.id) }}" class="text-decoration-none">{{ produkt.nazwa }}</a>
+                {% else %}
+                {{ produkt.nazwa }}
+                {% endif %}
+            </td>
+            <td>{{ produkt.ilosc }}</td>
+            <td>{{ produkt.numer_seryjny or 'brak' }}</td>
+            <td>{{ produkt.model or 'brak' }}</td>
+            <td>{{ produkt.uwagi or 'brak' }}</td>
+            <td>{{ produkt.stan_techniczny or 'brak' }}</td>
+            <td class="text-nowrap">
+                {% if session.get('grupa') >= 2 %}
+                <a href="{{ url_for('edytuj_produkt', produkt_id=produkt.id) }}" class="btn btn-sm btn-primary">Edytuj</a>
+                <a href="{{ url_for('przenies_produkt', produkt_id=produkt.id) }}" class="btn btn-sm btn-warning">Przenieś</a>
+                {% endif %}
+                {% if session.get('grupa') == 3 %}
+                <a href="{{ url_for('usun_produkt', produkt_id=produkt.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć produkt?')">Usuń</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% if produkty|length == 0 %}
+        <tr><td colspan="8" class="text-muted">Brak produktów</td></tr>
+        {% endif %}
+    </tbody>
+        
+</table>
+
+{% if session.get('grupa') == 3 %}
+<h2 class="h5 mt-4">Dodaj Produkt:</h2>
+<form action="{{ url_for('dodaj_produkt', magazyn_id=magazyn.id) }}" method="post" enctype="multipart/form-data" class="row g-3 w-75">
+    <div class="col-md-4">
+        <label for="nazwa" class="form-label">Nazwa:</label>
+        <input type="text" id="nazwa" name="nazwa" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+        <label for="ilosc" class="form-label">Ilość:</label>
+        <input type="number" id="ilosc" name="ilosc" class="form-control" required>
+    </div>
+    <div class="col-md-4">
+        <label for="numer_seryjny" class="form-label">Numer seryjny:</label>
+        <input type="text" id="numer_seryjny" name="numer_seryjny" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="model" class="form-label">Model:</label>
+        <input type="text" id="model" name="model" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="uwagi" class="form-label">Uwagi:</label>
+        <textarea id="uwagi" name="uwagi" class="form-control"></textarea>
+    </div>
+    <div class="col-md-4">
+        <label for="stan_techniczny" class="form-label">Stan techniczny:</label>
+        <input type="text" id="stan_techniczny" name="stan_techniczny" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="obrazek" class="form-label">Obrazek (opcjonalnie):</label>
+        <input type="file" id="obrazek" name="obrazek" class="form-control">
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-success">Dodaj</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}

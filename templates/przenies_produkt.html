@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Przenieś Produkt{% endblock %}
+{% block content %}
+<h1 class="mb-4">Przenieś Produkt: {{ produkt.nazwa }}</h1>
+<form action="" method="post" class="row g-3 w-50">
+    <div class="col-md-12">
+        <label for="magazyn_id" class="form-label">Wybierz magazyn docelowy:</label>
+        <select id="magazyn_id" name="magazyn_id" class="form-select">
+            {% for mag in magazyny %}
+            <option value="{{ mag.id }}" {% if mag.id == produkt.magazyn_id %}disabled{% endif %}>{{ mag.nazwa }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-success">Przenieś</button>
+        <a href="{{ url_for('magazyn', magazyn_id=produkt.magazyn_id) }}" class="btn btn-secondary">Anuluj</a>
+    </div>
+</form>
+{% endblock %}

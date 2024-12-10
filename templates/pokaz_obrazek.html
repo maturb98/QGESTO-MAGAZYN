@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Obrazek - {{ produkt.nazwa }}{% endblock %}
+{% block content %}
+<h1 class="mb-4">Obrazek produktu: {{ produkt.nazwa }}</h1>
+<div class="text-center">
+{% if produkt.obrazek %}
+    <img src="{{ url_for('obrazek', filename=produkt.obrazek) }}" alt="{{ produkt.nazwa }}" class="img-fluid" style="max-width:400px;">
+{% else %}
+    <p class="text-muted">Brak obrazka dla tego produktu.</p>
+{% endif %}
+</div>
+<a href="{{ url_for('magazyn', magazyn_id=produkt.magazyn_id) }}" class="btn btn-link mt-3">Powrót do magazynu</a>
+{% endblock %}

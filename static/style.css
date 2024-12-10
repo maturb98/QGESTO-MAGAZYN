@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f9f9f9;
+}
+
+.navbar {
+    background: #333;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    color: #fff;
+    margin-right: 15px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.logout-btn {
+    float: right;
+}
+
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+}
+
+.flash-messages li {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.flash-messages .success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.flash-messages .danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.flash-messages .warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+form label {
+    display: inline-block;
+    width: 150px;
+    margin-top: 10px;
+}
+
+form input {
+    margin-bottom: 10px;
+}
+.welcome {  
+    color: #fff;
+}
+
+.layout {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* aby rozciągnąć na pełną wysokość okna przeglądarki */
+    margin: 0;
+}
+
+.sidebar {
+    width: 200px;
+    background: #eee;
+    padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.container {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    overflow-y: auto;
+}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Lista Magazynów{% endblock %}
+{% block content %}
+<h1 class="mb-4">Lista Magazynów</h1>
+
+<ul class="list-group mb-4">
+    {% for magazyn in magazyny %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <a href="{{ url_for('magazyn', magazyn_id=magazyn.id) }}" class="text-decoration-none">{{ magazyn.nazwa }}</a>
+        </div>
+        {% if session.get('grupa') == 3 %}
+        <a href="{{ url_for('usun_magazyn', id=magazyn.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Czy na pewno usunąć magazyn?')">Usuń</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+    {% if magazyny|length == 0 %}
+    <li class="list-group-item text-muted">Brak magazynów</li>
+    {% endif %}
+</ul>
+
+{% if session.get('grupa') == 3 %}
+<h2 class="h5 mb-3">Dodaj Magazyn:</h2>
+<form action="{{ url_for('dodaj_magazyn') }}" method="post" class="row g-3 w-50">
+    <div class="col-8">
+        <label for="nazwa" class="form-label">Nazwa Magazynu:</label>
+        <input type="text" id="nazwa" name="nazwa" class="form-control" required>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-success">Dodaj</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
